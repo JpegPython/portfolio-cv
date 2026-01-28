@@ -2,15 +2,27 @@
 import { siteConfig } from "../config";
 ---
 
+<section class="relative w-full h-[220px] sm:h-[280px] md:h-[340px] lg:h-[420px] overflow-hidden">
+  <img
+    src="about_banner.JPG"
+    alt="Foto de apresentação"
+    class="absolute inset-0 w-full h-full object-cover"
+  />
+
+  <!-- overlay sutil -->
+  <div
+    class="absolute inset-0"
+    style={`background: linear-gradient(
+      to right,
+      ${siteConfig.accentColor}33,
+      transparent 60%
+    )`}
+  ></div>
+</section>
+
 <section id="about" class="p-8 sm:p-12 md:p-16 lg:p-24">
 
   <div>
-        <img
-      src="me.PNG"
-      alt="Foto de perfil"
-      class="w-40 h-40 sm:w-48 sm:h-48 rounded-full object-cover shadow-lg"
-      />
-      
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start">
 
       <div class="lg:col-span-4">
