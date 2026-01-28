@@ -1,92 +1,86 @@
 export const siteConfig = {
-  name: "Ryan Fitzgerald",
-  title: "Senior Software Engineer",
-  description: "Portfolio website of Ryan Fitzgerald",
+  name: "João Souza",
+  title: "Data Analyst | Computer Science Student",
+  description: "Portfolio website of João Souza",
   accentColor: "#1d4ed8",
+  profileImage: "/profile.png",
+  resume: "https://drive.google.com/file/d/1IvIH6rP70etty_ndVjhYzY-ZSVWNZfyB/view?usp=sharing",
+
   social: {
-    email: "your-email@example.com",
-    linkedin: "https://linkedin.com/in/yourprofile",
-    twitter: "https://x.com/rfitzio",
-    github: "https://github.com/RyanFitzgerald",
+    email: "jpegmateussouza@gmail.com",
+    linkedin: "https://linkedin.com/in/jpmsouza",
+    github: "https://github.com/JpegPython",
   },
+
   aboutMe:
-    "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem quos asperiores nihil consequatur tempore cupiditate architecto natus commodi corrupti quas quasi facere est, dignissimos odit nam veniam sapiente ut, vitae eligendi ipsum dolor, nostrum ullam impedit! Corrupti ratione mollitia temporibus necessitatibus, consectetur reiciendis recusandae id, dolorum quaerat, vero pariatur. Ratione!",
-  skills: ["Javascript", "React", "Node.js", "Python", "AWS", "Docker"],
+    "Final-year Computer Science student with hands-on experience in data analytics, automation, and applied machine learning. Passionate about transforming raw data into actionable insights that support strategic decision-making and real business impact. Experienced in corporate environments, dashboards, data pipelines, and collaborative, data-driven teams.",
+
+  skills: [
+    "Python",
+    "SQL",
+    "Data Analysis",
+    "Power BI",
+    "Looker Studio",
+    "Machine Learning",
+    "Deep Learning",
+    "Computer Vision",
+    "Data Pipelines (ETL)",
+    "APIs & Data Ingestion",
+    "Git",
+    "Docker (Basic)",
+    "Google Cloud Platform (GCP)",
+  ],
+
   projects: [
     {
-      name: "AI Dev Roundup Newsletter",
+      name: "Semantic Image Segmentation with CNNs",
       description:
-        "One concise email. Five minutes. Every Tuesday. Essential AI news & trends, production-ready libraries, powerful AI tools, and real-world code examples",
-      link: "https://aidevroundup.com/?ref=devportfolio",
-      skills: ["React", "Node.js", "AWS"],
+        "Academic research project focused on training convolutional neural networks for semantic image segmentation, including data preprocessing, augmentation, model evaluation, and deep learning experimentation.",
+      link: "https://github.com/JpegPython/mlss",
+      skills: ["Python", "Deep Learning", "Computer Vision"],
     },
     {
-      name: "Chrome Extension Mastery: Build Full-Stack Extensions with React & Node.js",
+      name: "Data Dashboards & Analytics Solutions",
       description:
-        "Master the art of building production-ready, full-stack Chrome Extensions using modern web technologies and best practices",
-      link: "https://fullstackextensions.com/?ref=devportfolio",
-      skills: ["React", "Node.js", "AWS"],
-    },
-    {
-      name: "ExtensionKit",
-      description:
-        "Kit to jump-start your Chrome extension projects with a variety of battle-tested starter templates & examples",
-      link: "https://extensionkit.io/?ref=devportfolio",
-      skills: ["React", "Node.js", "AWS"],
+        "Development of KPI-driven dashboards and analytics solutions to support business and operational decision-making using structured data pipelines.",
+      link: "https://github.com/JpegPython/",
+      skills: ["Python", "SQL", "Power BI"],
     },
   ],
+
   experience: [
     {
-      company: "Tech Company",
-      title: "Senior Software Engineer",
-      dateRange: "Jan 2022 - Present",
+      company: "Nokia Corporation",
+      title: "Automation & Data Analytics Intern",
+      dateRange: "2024 – 2026",
       bullets: [
-        "Led development of microservices architecture serving 1M+ users",
-        "Reduced API response times by 40% through optimization",
-        "Mentored team of 5 junior developers",
+        "Developed dashboards and automated reports to support operational and strategic decision-making",
+        "Performed data extraction, transformation, and modeling for analytics solutions",
+        "Collaborated with cross-functional and international teams in a large-scale telecom environment",
       ],
     },
     {
-      company: "Startup Inc",
-      title: "Full Stack Developer",
-      dateRange: "Jun 2020 - Dec 2021",
+      company: "Acceta Especialistas",
+      title: "Technology Consultant & Developer",
+      dateRange: "2023 – 2024",
       bullets: [
-        "Built and launched MVP product from scratch using React and Node.js",
-        "Implemented CI/CD pipeline reducing deployment time by 60%",
-        "Collaborated with product team to define technical requirements",
-      ],
-    },
-    {
-      company: "Digital Agency",
-      title: "Frontend Developer",
-      dateRange: "Aug 2018 - May 2020",
-      bullets: [
-        "Developed responsive web applications for 20+ clients",
-        "Improved site performance scores by 35% on average",
-        "Introduced modern JavaScript frameworks to legacy codebases",
+        "Supported R&D and innovation projects through data analysis and technical documentation",
+        "Co-developed an internal platform using Django and MySQL",
+        "Applied Large Language Models (LLMs) to improve structured technical writing and productivity",
       ],
     },
   ],
+
   education: [
     {
-      school: "University Name",
-      degree: "Bachelor of Science in Computer Science",
-      dateRange: "2014 - 2018",
+      school: "Fluminense Federal University (UFF)",
+      degree: "B.Sc. in Computer Science",
+      dateRange: "Final Year – Expected Graduation 2026",
       achievements: [
-        "Graduated Magna Cum Laude with 3.8 GPA",
-        "Dean's List all semesters",
-        "President of Computer Science Club",
-      ],
-    },
-    {
-      school: "Online Platform",
-      degree: "Full Stack Development Certificate",
-      dateRange: "2019",
-      achievements: [
-        "Completed 500+ hours of coursework",
-        "Built 10+ portfolio projects",
-        "Specialized in React and Node.js",
+        "Strong academic focus on data analysis, algorithms, and software engineering",
+        "Academic projects involving machine learning and data-driven solutions",
       ],
     },
   ],
+  
 };
