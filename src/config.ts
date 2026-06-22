@@ -50,7 +50,7 @@ export const siteConfig = {
 
   experience: [
     {
-      company: "ELEVENTIAL DIGITAL SOLUTIONS",
+      company: "Elevential Digital Solutions",
       title: "Full-Stack Developer",
       dateRange: "2026 – Present",
       bullets: [
