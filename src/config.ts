@@ -50,6 +50,16 @@ export const siteConfig = {
 
   experience: [
     {
+      company: "ELEVENTIAL DIGITAL SOLUTIONS",
+      title: "Full-Stack Developer",
+      dateRange: "2026 – Present",
+      bullets: [
+      "Built full-stack features for a real estate credit platform using Django and React",
+      "Designed AI-powered solutions with LLMs and intelligent agents to classify, categorize, and process real estate documents",
+      "Implemented API integrations with notary operators and real estate systems to improve automation in financial workflows",
+      ],
+    },
+    {
       company: "Nokia Corporation",
       title: "Automation & Data Analytics Intern",
       dateRange: "2024 – 2026",
@@ -70,6 +80,7 @@ export const siteConfig = {
       ],
     },
   ],
+  
 
   education: [
     {
