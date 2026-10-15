@@ -1,0 +1,46 @@
+---
+import { siteConfig } from "../config";
+import SectionHeading from "./SectionHeading.astro";
+import Icon from "./Icon.astro";
+---
+
+{
+  siteConfig.skills.length > 0 && (
+    <section id="skills" class="section-pad bg-zinc-50/80 dark:bg-zinc-900/30">
+      <div class="container-page">
+        <SectionHeading
+          id="skills"
+          eyebrow="toolbox"
+          title="Skills & technologies"
+          subtitle="From model training to production web platforms — the stack I use to ship end-to-end."
+        />
+
+        <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {siteConfig.skills.map((group, i) => (
+            <article
+              class:list={[
+                "card group p-6 transition-colors hover:border-brand/40 sm:p-7",
+                i === 0 && "md:col-span-2",
+              ]}
+              data-reveal
+              style={`--reveal-delay: ${(i % 3) * 80}ms`}
+            >
+              <div class="flex items-center gap-3">
+                <span class="grid size-11 place-items-center rounded-xl bg-brand/10 text-brand-ink transition-colors group-hover:bg-brand group-hover:text-white">
+                  <Icon name={group.icon} class="size-6" />
+                </span>
+                <h3 class="font-mono text-lg font-semibold text-zinc-900 dark:text-white">{group.category}</h3>
+                <span class="ml-auto font-mono text-xs text-zinc-400">{group.items.length}</span>
+              </div>
+              <ul class="mt-5 flex flex-wrap gap-2">
+                {group.items.map((item) => (
+                  <li class="chip">{item}</li>
+                ))}
+              </ul>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}

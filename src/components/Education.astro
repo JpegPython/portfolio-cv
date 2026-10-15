@@ -1,58 +1,106 @@
 ---
 import { siteConfig } from "../config";
-const hasEducation = siteConfig.education && siteConfig.education.length > 0;
+import SectionHeading from "./SectionHeading.astro";
+import Icon from "./Icon.astro";
+
+const { education, certifications, languages } = siteConfig;
+const hasSection = education.length > 0 || certifications.length > 0 || languages.length > 0;
+const hasSidebar = education.length > 0 || languages.length > 0;
 ---
 
 {
-  hasEducation && (
-    <section id="education" class="p-8 sm:p-12 md:p-16 lg:p-24">
-      <div>
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start">
-          <div class="lg:col-span-4">
-            <h2 class="text-3xl sm:text-4xl md:text-5xl xl:text-7xl font-bold text-gray-900">
-              Education
-            </h2>
-            <div
-              class="w-[75px] h-[5px] mt-2 rounded-full"
-              style={`background-color: ${siteConfig.accentColor}`}
-            />
-          </div>
+  hasSection && (
+    <section id="education" class="section-pad bg-zinc-50/80 dark:bg-zinc-900/30">
+      <div class="container-page">
+        <SectionHeading
+          id="education"
+          eyebrow="learning"
+          title="Education & certifications"
+          subtitle="Formal education, continuous learning and the languages I work in."
+        />
 
-          <div class="lg:col-span-8">
-            <div class="space-y-8">
-              {siteConfig.education.map((edu) => (
-                <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 sm:p-5 md:p-6 hover:shadow-md transition-shadow duration-300">
-                  <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-4">
-                    <div>
-                      <h3 class="text-lg sm:text-xl font-semibold text-gray-900">
-                        {edu.degree}
-                      </h3>
-                      <p
-                        class="text-base sm:text-lg"
-                        style={`color: ${siteConfig.accentColor}`}
-                      >
-                        {edu.school}
-                      </p>
-                    </div>
-                    <span class="text-xs sm:text-sm text-gray-500 mt-2 sm:mt-0">
-                      {edu.dateRange}
+        <div class="grid gap-6 lg:grid-cols-12">
+          {hasSidebar && (
+            <div class:list={["space-y-6", certifications.length > 0 ? "lg:col-span-5" : "lg:col-span-12"]}>
+              {education.map((edu) => (
+                <article class="card p-6 sm:p-8" data-reveal>
+                  <div class="flex items-start gap-4">
+                    <span class="grid size-12 shrink-0 place-items-center rounded-2xl bg-brand text-white">
+                      <Icon name="school" class="size-6" />
                     </span>
+                    <div class="min-w-0">
+                      <p class="font-mono text-xs tracking-wide text-zinc-500 uppercase">{edu.dateRange}</p>
+                      <h3 class="mt-1 font-mono text-lg font-semibold text-zinc-900 dark:text-white">{edu.degree}</h3>
+                      <p class="mt-0.5 text-brand-ink">{edu.school}</p>
+                      {edu.location && <p class="mt-1 text-sm text-zinc-500">{edu.location}</p>}
+                    </div>
                   </div>
+                  {edu.achievements.length > 0 && (
+                    <ul class="mt-6 space-y-3 border-t border-zinc-100 pt-5 dark:border-zinc-800">
+                      {edu.achievements.map((a) => (
+                        <li class="flex gap-3 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+                          <span class="mt-[0.6em] h-0.5 w-2.5 shrink-0 rounded-full bg-brand" aria-hidden="true" />
+                          <span>{a}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </article>
+              ))}
 
-                  <ul class="space-y-2">
-                    {edu.achievements.map((achievement) => (
-                      <li class="flex items-start">
-                        <span class="inline-block w-1.5 h-1.5 rounded-full bg-gray-400 mt-2 mr-3 flex-shrink-0" />
-                        <span class="text-sm sm:text-base text-gray-600">
-                          {achievement}
-                        </span>
+              {languages.length > 0 && (
+                <article class="card p-6 sm:p-8" data-reveal style="--reveal-delay: 80ms">
+                  <h3 class="flex items-center gap-2 font-mono text-base font-semibold text-zinc-900 dark:text-white">
+                    <Icon name="language" class="size-5 text-brand-ink" />
+                    Languages
+                  </h3>
+                  <ul class="mt-5 space-y-4">
+                    {languages.map((l) => (
+                      <li class="flex items-center justify-between gap-4">
+                        <div>
+                          <p class="font-medium text-zinc-900 dark:text-zinc-100">{l.name}</p>
+                          <p class="font-mono text-xs text-zinc-500">{l.level}</p>
+                        </div>
+                        <div class="flex gap-1" role="img" aria-label={`${l.level}: ${l.score} out of 5`}>
+                          {[1, 2, 3, 4, 5].map((n) => (
+                            <span
+                              class:list={[
+                                "h-2 w-5 rounded-full",
+                                n <= l.score ? "bg-brand" : "bg-zinc-200 dark:bg-zinc-800",
+                              ]}
+                            />
+                          ))}
+                        </div>
                       </li>
                     ))}
                   </ul>
-                </div>
-              ))}
+                </article>
+              )}
             </div>
-          </div>
+          )}
+
+          {certifications.length > 0 && (
+            <div class:list={["card p-6 sm:p-8", hasSidebar ? "lg:col-span-7" : "lg:col-span-12"]} data-reveal style="--reveal-delay: 120ms">
+              <div class="flex items-center justify-between gap-4">
+                <h3 class="flex items-center gap-2 font-mono text-base font-semibold text-zinc-900 dark:text-white">
+                  <Icon name="certificate" class="size-5 text-brand-ink" />
+                  Certifications & courses
+                </h3>
+                <span class="chip">{certifications.length}</span>
+              </div>
+              <ul class="mt-6 grid gap-3 sm:grid-cols-2">
+                {certifications.map((c) => (
+                  <li class="flex items-start gap-3 rounded-xl border border-zinc-100 bg-zinc-50/60 p-4 transition-colors hover:border-brand/30 dark:border-zinc-800 dark:bg-zinc-950/40">
+                    <Icon name="check" class="mt-0.5 size-4 shrink-0 text-brand-ink" strokeWidth={2.25} />
+                    <div>
+                      <p class="text-sm leading-snug font-medium text-zinc-800 dark:text-zinc-200">{c.name}</p>
+                      <p class="mt-1 font-mono text-xs text-zinc-500">{c.issuer}</p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       </div>
     </section>

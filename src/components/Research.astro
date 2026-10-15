@@ -1,0 +1,40 @@
+---
+import { siteConfig } from "../config";
+import SectionHeading from "./SectionHeading.astro";
+import Icon from "./Icon.astro";
+---
+
+{
+  siteConfig.research.length > 0 && (
+    <section id="research" class="section-pad">
+      <div class="container-page">
+        <SectionHeading
+          id="research"
+          eyebrow="academic experience"
+          title="Research & academia"
+          subtitle="Where my interest in deep learning and computer vision started."
+        />
+
+        <div class="grid gap-6 md:grid-cols-2">
+          {siteConfig.research.map((r, i) => (
+            <article class="card p-6 sm:p-8" data-reveal style={`--reveal-delay: ${(i % 2) * 100}ms`}>
+              <span class="grid size-11 place-items-center rounded-xl bg-brand/10 text-brand-ink">
+                <Icon name={r.icon ?? "flask"} class="size-6" />
+              </span>
+              <h3 class="mt-5 font-mono text-lg font-semibold text-zinc-900 dark:text-white">{r.title}</h3>
+              <p class="mt-1 text-sm text-zinc-500 dark:text-zinc-400">{r.organization}</p>
+              <ul class="mt-5 space-y-3">
+                {r.bullets.map((b) => (
+                  <li class="flex gap-3 text-sm leading-relaxed text-zinc-600 sm:text-[0.95rem] dark:text-zinc-400">
+                    <span class="mt-[0.6em] h-0.5 w-2.5 shrink-0 rounded-full bg-brand" aria-hidden="true" />
+                    <span>{b}</span>
+                  </li>
+                ))}
+              </ul>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}

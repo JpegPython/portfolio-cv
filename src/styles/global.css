@@ -1,5 +1,126 @@
 @import "tailwindcss";
 
+/* Dark mode follows the `.dark` class on <html> (set before paint in index.astro). */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* `--accent` is injected from siteConfig.accentColor on <html>. */
+  --color-brand: var(--accent);
+  /* Accent tuned for text: the raw accent on light, a lighter tint on dark. */
+  --color-brand-ink: var(--accent-ink);
+}
+
+:root {
+  --accent: #1d4ed8;
+  --accent-ink: var(--accent);
+  color-scheme: light;
+}
+
+.dark {
+  --accent-ink: color-mix(in oklab, var(--accent) 55%, white);
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+  -webkit-tap-highlight-color: transparent;
+}
+
 body {
-  font-family: 'IBM Plex Mono', monospace;
+  @apply bg-white font-sans text-zinc-700 antialiased dark:bg-zinc-950 dark:text-zinc-300;
+}
+
+::selection {
+  background: color-mix(in oklab, var(--accent) 25%, transparent);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent-ink);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* ---------- Reusable bits ---------- */
+
+@utility container-page {
+  @apply mx-auto w-full max-w-6xl px-5 sm:px-8;
+}
+
+@utility section-pad {
+  @apply py-20 sm:py-24 lg:py-28;
+}
+
+@utility card {
+  @apply rounded-2xl border border-zinc-200/80 bg-white shadow-sm shadow-zinc-900/[0.03] dark:border-zinc-800 dark:bg-zinc-900/60 dark:shadow-none;
+}
+
+@utility chip {
+  @apply inline-flex items-center rounded-full border border-zinc-200 bg-zinc-50 px-3 py-1 font-mono text-xs text-zinc-700 dark:border-zinc-700/80 dark:bg-zinc-800/60 dark:text-zinc-300;
+}
+
+/* Subtle grid backdrop used by the hero and contact panel. */
+@utility bg-grid {
+  background-image:
+    linear-gradient(to right, rgb(113 113 122 / 0.12) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(113 113 122 / 0.12) 1px, transparent 1px);
+  background-size: 56px 56px;
+}
+
+/* ---------- Motion ---------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-reveal] {
+    opacity: 0;
+    transform: translateY(24px);
+    transition:
+      opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+
+  .js [data-reveal].is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.caret {
+  animation: blink 1s steps(1) infinite;
 }

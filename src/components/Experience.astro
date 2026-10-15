@@ -1,73 +1,84 @@
 ---
 import { siteConfig } from "../config";
-const hasExperience = siteConfig.experience && siteConfig.experience.length > 0;
+import SectionHeading from "./SectionHeading.astro";
+import Icon from "./Icon.astro";
 ---
 
 {
-  hasExperience && (
-    <section id="experience" class="p-8 sm:p-12 md:p-16 lg:p-24">
-      <div>
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start">
-          <div class="lg:col-span-4">
-            <h2 class="text-3xl sm:text-4xl md:text-5xl xl:text-7xl font-bold text-gray-900">
-              Experience
-            </h2>
-            <div
-              class="w-[75px] h-[5px] mt-2 rounded-full"
-              style={`background-color: ${siteConfig.accentColor}`}
-            />
-          </div>
+  siteConfig.experience.length > 0 && (
+    <section id="experience" class="section-pad">
+      <div class="container-page">
+        <SectionHeading
+          id="experience"
+          eyebrow="career"
+          title="Where I've worked"
+          subtitle="Building products, pipelines and automation for credit, telecom and R&D teams."
+        />
 
-          <div class="lg:col-span-8">
-            <div class="relative">
-              {siteConfig.experience.map((exp, index) => (
-                <div class="relative mb-12 last:mb-0">
-                  {/* Timeline dot at top of card */}
-                  <div
-                    class="absolute left-1/2 -top-2 w-4 h-4 bg-white border-2 rounded-full -translate-x-1/2 z-20 transition-all duration-300"
-                    style={`border-color: ${siteConfig.accentColor}; background-color: ${siteConfig.accentColor}`}
-                  />
+        <ol class="relative space-y-10 border-l border-zinc-200 pl-6 sm:pl-10 md:border-none md:pl-0 dark:border-zinc-800">
+          {siteConfig.experience.map((exp, i) => (
+            <li class="relative md:grid md:grid-cols-[13rem_1fr] md:gap-10" data-reveal>
+              {/* Date column + timeline rail (desktop) */}
+              <div class="relative mb-3 md:mb-0 md:pt-7 md:text-right">
+                <span
+                  class:list={[
+                    "absolute top-1.5 -left-[calc(1.5rem+5px)] size-2.5 rounded-full ring-4 ring-white sm:-left-[calc(2.5rem+5px)] md:top-8 md:-right-[calc(1.25rem+5px)] md:left-auto dark:ring-zinc-950",
+                    exp.current ? "bg-brand" : "bg-zinc-300 dark:bg-zinc-600",
+                  ]}
+                  aria-hidden="true"
+                />
+                <p class="font-mono text-sm text-zinc-500 dark:text-zinc-400">{exp.dateRange}</p>
+                {exp.current && (
+                  <span class="mt-2 inline-flex items-center gap-1.5 rounded-full bg-brand/10 px-2.5 py-0.5 font-mono text-xs font-medium text-brand-ink">
+                    <span class="size-1.5 animate-pulse rounded-full bg-brand" />
+                    Current
+                  </span>
+                )}
+              </div>
 
-                  {/* Connecting line below card */}
-                  {index < siteConfig.experience.length - 1 && (
-                    <div class="absolute left-1/2 bottom-0 w-0.5 h-12 bg-gray-300 -translate-x-1/2 translate-y-full z-10" />
-                  )}
-
-                  {/* Experience card */}
-                  <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 sm:p-5 md:p-6 hover:shadow-md transition-shadow duration-300">
-                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
-                      <div>
-                        <h3 class="text-lg sm:text-xl font-semibold text-gray-900">
-                          {exp.title}
-                        </h3>
-                        <p
-                          class="text-base sm:text-lg"
-                          style={`color: ${siteConfig.accentColor}`}
-                        >
-                          {exp.company}
-                        </p>
-                      </div>
-                      <span class="text-xs sm:text-sm text-gray-500 mt-2 sm:mt-0">
-                        {exp.dateRange}
-                      </span>
-                    </div>
-
-                    <ul class="space-y-2">
-                      {exp.bullets.map((bullet) => (
-                        <li class="flex items-start">
-                          <span class="inline-block w-1.5 h-1.5 rounded-full bg-gray-400 mt-2 mr-3 flex-shrink-0" />
-                          <span class="text-sm sm:text-base text-gray-600">
-                            {bullet}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
+              <article
+                class:list={[
+                  "card relative p-6 transition-shadow hover:shadow-lg hover:shadow-zinc-900/5 sm:p-8 md:before:absolute md:before:top-0 md:before:-left-[calc(1.25rem+0.5px)] md:before:w-px md:before:bg-zinc-200 dark:md:before:bg-zinc-800",
+                  i === siteConfig.experience.length - 1 ? "md:before:h-full" : "md:before:h-[calc(100%+2.5rem)]",
+                ]}
+              >
+                <header class="flex flex-wrap items-start justify-between gap-x-4 gap-y-1">
+                  <div>
+                    <h3 class="font-mono text-lg font-semibold text-zinc-900 sm:text-xl dark:text-white">{exp.title}</h3>
+                    <p class="mt-0.5 font-medium text-brand-ink">{exp.company}</p>
                   </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+                  {exp.location && (
+                    <p class="inline-flex items-center gap-1 font-mono text-xs text-zinc-500">
+                      <Icon name="map-pin" class="size-3.5" />
+                      {exp.location}
+                    </p>
+                  )}
+                </header>
+
+                {exp.summary && (
+                  <p class="mt-4 text-pretty text-zinc-600 dark:text-zinc-400">{exp.summary}</p>
+                )}
+
+                <ul class="mt-5 space-y-3">
+                  {exp.bullets.map((bullet) => (
+                    <li class="flex gap-3 text-sm leading-relaxed text-zinc-600 sm:text-[0.95rem] dark:text-zinc-400">
+                      <span class="mt-[0.6em] h-0.5 w-2.5 shrink-0 rounded-full bg-brand" aria-hidden="true" />
+                      <span>{bullet}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                {exp.skills && exp.skills.length > 0 && (
+                  <ul class="mt-6 flex flex-wrap gap-2 border-t border-zinc-100 pt-5 dark:border-zinc-800" aria-label="Technologies">
+                    {exp.skills.map((s) => (
+                      <li class="chip">{s}</li>
+                    ))}
+                  </ul>
+                )}
+              </article>
+            </li>
+          ))}
+        </ol>
       </div>
     </section>
   )

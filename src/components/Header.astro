@@ -1,78 +1,173 @@
 ---
 import { siteConfig } from "../config";
+import { sections } from "../sections";
+import { withBase } from "../utils";
+import Icon from "./Icon.astro";
 
-const hasProjects = siteConfig.projects && siteConfig.projects.length > 0;
-const hasExperience = siteConfig.experience && siteConfig.experience.length > 0;
-const hasEducation = siteConfig.education && siteConfig.education.length > 0;
+const [first, ...rest] = siteConfig.name.split(" ");
 ---
 
 <header
   id="header"
-  class="fixed top-0 left-0 right-0 z-50 hidden md:block transition-all duration-300"
+  class="fixed inset-x-0 top-0 z-50 border-b border-transparent transition-[background-color,border-color,backdrop-filter] duration-300 data-[scrolled]:border-zinc-200/70 data-[scrolled]:bg-white/80 data-[scrolled]:backdrop-blur-lg dark:data-[scrolled]:border-zinc-800/70 dark:data-[scrolled]:bg-zinc-950/80"
 >
-  <nav class="max-w-7xl mx-auto px-8 py-4">
-    <ul class="flex items-center gap-8 justify-center">
-      <li>
-        <a
-          href="#about"
-          class="text-gray-700 hover:text-black transition-colors font-medium"
-        >
-          About
-        </a>
-      </li>
+  <nav class="container-page flex h-16 items-center justify-between gap-4" aria-label="Main">
+    <a
+      href="#top"
+      class="font-mono text-base font-semibold tracking-tight text-zinc-900 dark:text-white"
+      aria-label={`${siteConfig.name} — back to top`}
+    >
+      {first.toLowerCase()}<span class="text-brand-ink">.</span>{rest.join("").toLowerCase()}
+    </a>
+
+    <ul class="hidden items-center gap-1 lg:flex">
       {
-        hasProjects && (
+        sections.map((s) => (
           <li>
             <a
-              href="#projects"
-              class="text-gray-700 hover:text-black transition-colors font-medium"
+              href={`#${s.id}`}
+              data-nav-link={s.id}
+              class="relative rounded-full px-3 py-2 font-mono text-sm text-zinc-600 transition-colors hover:text-zinc-900 aria-[current=true]:text-brand-ink dark:text-zinc-400 dark:hover:text-white"
             >
-              Projects
+              {s.label}
             </a>
           </li>
+        ))
+      }
+    </ul>
+
+    <div class="flex items-center gap-2">
+      <button
+        type="button"
+        data-theme-toggle
+        class="grid size-10 place-items-center rounded-full text-zinc-600 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-white"
+        aria-label="Toggle dark mode"
+      >
+        <Icon name="moon" class="size-5 dark:hidden" />
+        <Icon name="sun" class="hidden size-5 dark:block" />
+      </button>
+
+      {
+        siteConfig.resume && (
+          <a
+            href={withBase(siteConfig.resume)}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="hidden items-center gap-2 rounded-full bg-zinc-900 px-4 py-2 font-mono text-sm font-medium text-white transition-colors hover:bg-brand sm:inline-flex dark:bg-white dark:text-zinc-900 dark:hover:bg-brand dark:hover:text-white"
+          >
+            <Icon name="file-cv" class="size-4" />
+            Résumé
+          </a>
         )
       }
+
+      <button
+        type="button"
+        data-menu-toggle
+        class="grid size-10 place-items-center rounded-full text-zinc-700 transition-colors hover:bg-zinc-100 lg:hidden dark:text-zinc-300 dark:hover:bg-zinc-800"
+        aria-label="Open menu"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+      >
+        <Icon name="menu-2" class="size-6" />
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile menu -->
+  <div
+    id="mobile-menu"
+    class="pointer-events-none absolute inset-x-0 top-full origin-top -translate-y-2 border-b border-zinc-200 bg-white opacity-0 shadow-xl shadow-zinc-900/5 transition duration-200 data-[open]:pointer-events-auto data-[open]:translate-y-0 data-[open]:opacity-100 lg:hidden dark:border-zinc-800 dark:bg-zinc-950"
+    inert
+  >
+    <ul class="container-page flex flex-col py-4">
       {
-        hasExperience && (
+        sections.map((s, i) => (
           <li>
             <a
-              href="#experience"
-              class="text-gray-700 hover:text-black transition-colors font-medium"
+              href={`#${s.id}`}
+              data-nav-link={s.id}
+              class="flex items-center gap-3 rounded-xl px-3 py-3 font-mono text-base text-zinc-700 transition-colors hover:bg-zinc-100 aria-[current=true]:text-brand-ink dark:text-zinc-300 dark:hover:bg-zinc-900"
             >
-              Experience
+              <span class="text-xs text-zinc-400 dark:text-zinc-600">{String(i + 1).padStart(2, "0")}</span>
+              {s.label}
             </a>
           </li>
-        )
+        ))
       }
       {
-        hasEducation && (
-          <li>
+        siteConfig.resume && (
+          <li class="mt-2 px-3 sm:hidden">
             <a
-              href="#education"
-              class="text-gray-700 hover:text-black transition-colors font-medium"
+              href={withBase(siteConfig.resume)}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="flex items-center justify-center gap-2 rounded-full bg-zinc-900 px-4 py-3 font-mono text-sm font-medium text-white dark:bg-white dark:text-zinc-900"
             >
-              Education
+              <Icon name="download" class="size-4" />
+              Download résumé
             </a>
           </li>
         )
       }
     </ul>
-  </nav>
+  </div>
+
+  <!-- Scroll progress -->
+  <div class="absolute inset-x-0 bottom-0 h-0.5 overflow-hidden" aria-hidden="true">
+    <div data-progress class="h-full w-full origin-left scale-x-0 bg-brand"></div>
+  </div>
 </header>
 
 <script>
-  window.addEventListener("scroll", () => {
-    const header = document.getElementById("header");
-    if (window.scrollY > 100) {
-      header?.classList.add("bg-white/80", "backdrop-blur-sm");
-    } else {
-      header?.classList.remove("bg-white/80", "backdrop-blur-sm");
-    }
-  });
-</script>
+  const header = document.getElementById("header")!;
+  const progress = header.querySelector<HTMLElement>("[data-progress]")!;
+  const menu = document.getElementById("mobile-menu")!;
+  const menuToggle = header.querySelector<HTMLButtonElement>("[data-menu-toggle]")!;
 
-<style>
-  html {
-    scroll-behavior: smooth;
-  }
-</style>
+  // Header background + scroll progress
+  const onScroll = () => {
+    const y = window.scrollY;
+    header.toggleAttribute("data-scrolled", y > 24 || menu.hasAttribute("data-open"));
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    progress.style.transform = `scaleX(${max > 0 ? Math.min(y / max, 1) : 0})`;
+  };
+  window.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+
+  // Mobile menu
+  const setMenu = (open: boolean) => {
+    menu.toggleAttribute("data-open", open);
+    menu.toggleAttribute("inert", !open);
+    menuToggle.setAttribute("aria-expanded", String(open));
+    menuToggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+    onScroll();
+  };
+  menuToggle.addEventListener("click", () => setMenu(!menu.hasAttribute("data-open")));
+  menu.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => setMenu(false)));
+  document.addEventListener("keydown", (e) => e.key === "Escape" && setMenu(false));
+  window.matchMedia("(min-width: 1024px)").addEventListener("change", () => setMenu(false));
+
+  // Theme toggle
+  header.querySelector("[data-theme-toggle]")!.addEventListener("click", () => {
+    const dark = document.documentElement.classList.toggle("dark");
+    try {
+      localStorage.setItem("theme", dark ? "dark" : "light");
+    } catch {}
+  });
+
+  // Highlight the section currently in view
+  const links = document.querySelectorAll<HTMLAnchorElement>("[data-nav-link]");
+  const observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        links.forEach((l) =>
+          l.setAttribute("aria-current", String(l.dataset.navLink === entry.target.id)),
+        );
+      }
+    },
+    { rootMargin: "-45% 0px -50% 0px" },
+  );
+  document.querySelectorAll("main section[id]").forEach((s) => observer.observe(s));
+</script>

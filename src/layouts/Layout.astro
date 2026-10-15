@@ -1,0 +1,132 @@
+---
+import { siteConfig } from "../config";
+import { withBase } from "../utils";
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = `${siteConfig.fullName} — ${siteConfig.title}`,
+  description = siteConfig.description,
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL(withBase("og-image.jpg"), Astro.site);
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: siteConfig.fullName,
+  jobTitle: siteConfig.roles[0],
+  description: siteConfig.description,
+  url: canonical.href,
+  image: ogImage.href,
+  email: siteConfig.social.email ? `mailto:${siteConfig.social.email}` : undefined,
+  address: { "@type": "PostalAddress", addressLocality: siteConfig.location },
+  worksFor: siteConfig.experience.find((e) => e.current)?.company,
+  alumniOf: siteConfig.education.map((e) => ({ "@type": "CollegeOrUniversity", name: e.school })),
+  knowsAbout: siteConfig.skills.flatMap((g) => g.items),
+  knowsLanguage: siteConfig.languages.map((l) => l.name),
+  sameAs: [siteConfig.social.linkedin, siteConfig.social.github, siteConfig.social.twitter].filter(Boolean),
+};
+---
+
+<!doctype html>
+<html lang="en" style={`--accent: ${siteConfig.accentColor}`}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content={siteConfig.fullName} />
+    <link rel="canonical" href={canonical} />
+    <meta name="generator" content={Astro.generator} />
+
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)" />
+
+    <link rel="icon" type="image/svg+xml" href={withBase("favicon.svg")} />
+    <link rel="icon" type="image/png" sizes="32x32" href={withBase("favicon-32x32.png")} />
+    <link rel="icon" type="image/png" sizes="16x16" href={withBase("favicon-16x16.png")} />
+    <link rel="apple-touch-icon" sizes="180x180" href={withBase("apple-touch-icon.png")} />
+    <link rel="manifest" href={withBase("site.webmanifest")} />
+
+    <!-- Open Graph / social previews -->
+    <meta property="og:type" content="profile" />
+    <meta property="og:site_name" content={siteConfig.fullName} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="en_US" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Theme + JS flag before first paint (avoids a flash of the wrong theme) -->
+    <script is:inline>
+      (() => {
+        const root = document.documentElement;
+        root.classList.add("js");
+        let stored = null;
+        try {
+          stored = localStorage.getItem("theme");
+        } catch {}
+        const media = window.matchMedia("(prefers-color-scheme: dark)");
+        root.classList.toggle("dark", stored ? stored === "dark" : media.matches);
+        media.addEventListener("change", (e) => {
+          let pinned = null;
+          try {
+            pinned = localStorage.getItem("theme");
+          } catch {}
+          if (!pinned) root.classList.toggle("dark", e.matches);
+        });
+      })();
+    </script>
+  </head>
+  <body>
+    <a
+      href="#main"
+      class="sr-only z-[60] rounded-full bg-zinc-900 px-4 py-2 font-mono text-sm text-white focus:not-sr-only focus:fixed focus:top-3 focus:left-3"
+    >
+      Skip to content
+    </a>
+    <slot />
+
+    <script>
+      // Reveal-on-scroll for elements marked with data-reveal
+      const items = document.querySelectorAll<HTMLElement>("[data-reveal]");
+      if ("IntersectionObserver" in window) {
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("is-visible");
+                io.unobserve(entry.target);
+              }
+            }
+          },
+          { rootMargin: "0px 0px -8% 0px", threshold: 0.08 },
+        );
+        items.forEach((el) => io.observe(el));
+      } else {
+        items.forEach((el) => el.classList.add("is-visible"));
+      }
+    </script>
+  </body>
+</html>
