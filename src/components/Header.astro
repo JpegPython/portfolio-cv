@@ -1,8 +1,15 @@
 ---
-import { siteConfig } from "../config";
-import { sections } from "../sections";
+import { getConfig } from "../config";
+import { getLang, ui } from "../i18n";
+import { getSections } from "../sections";
 import { withBase } from "../utils";
 import Icon from "./Icon.astro";
+import LanguageSwitcher from "./LanguageSwitcher.astro";
+
+const lang = getLang(Astro.url);
+const siteConfig = getConfig(lang);
+const t = ui[lang];
+const sections = getSections(lang);
 
 const [first, ...rest] = siteConfig.name.split(" ");
 ---
@@ -14,20 +21,20 @@ const [first, ...rest] = siteConfig.name.split(" ");
   <nav class="container-page flex h-16 items-center justify-between gap-4" aria-label="Main">
     <a
       href="#top"
-      class="font-mono text-base font-semibold tracking-tight text-zinc-900 dark:text-white"
-      aria-label={`${siteConfig.name} — back to top`}
+      class="-my-2 py-2 font-mono text-base font-semibold tracking-tight text-zinc-900 max-[359px]:text-sm dark:text-white"
+      aria-label={`${siteConfig.name} — ${t.a11y.backToTop}`}
     >
       {first.toLowerCase()}<span class="text-brand-ink">.</span>{rest.join("").toLowerCase()}
     </a>
 
-    <ul class="hidden items-center gap-1 lg:flex">
+    <ul class="hidden items-center gap-0.5 lg:flex xl:gap-1">
       {
         sections.map((s) => (
           <li>
             <a
               href={`#${s.id}`}
               data-nav-link={s.id}
-              class="relative rounded-full px-3 py-2 font-mono text-sm text-zinc-600 transition-colors hover:text-zinc-900 aria-[current=true]:text-brand-ink dark:text-zinc-400 dark:hover:text-white"
+              class="relative rounded-full px-2 py-2 font-mono text-sm xl:px-3 text-zinc-600 transition-colors hover:text-zinc-900 aria-[current=true]:text-brand-ink dark:text-zinc-400 dark:hover:text-white"
             >
               {s.label}
             </a>
@@ -36,12 +43,14 @@ const [first, ...rest] = siteConfig.name.split(" ");
       }
     </ul>
 
-    <div class="flex items-center gap-2">
+    <div class="flex items-center gap-1 min-[360px]:gap-1.5 sm:gap-2">
+      <LanguageSwitcher />
+
       <button
         type="button"
         data-theme-toggle
-        class="grid size-10 place-items-center rounded-full text-zinc-600 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-white"
-        aria-label="Toggle dark mode"
+        class="grid size-9 place-items-center rounded-full text-zinc-600 transition-colors hover:bg-zinc-100 hover:text-zinc-900 min-[360px]:size-10 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-white"
+        aria-label={t.a11y.toggleTheme}
       >
         <Icon name="moon" class="size-5 dark:hidden" />
         <Icon name="sun" class="hidden size-5 dark:block" />
@@ -53,10 +62,11 @@ const [first, ...rest] = siteConfig.name.split(" ");
             href={withBase(siteConfig.resume)}
             target="_blank"
             rel="noopener noreferrer"
-            class="hidden items-center gap-2 rounded-full bg-zinc-900 px-4 py-2 font-mono text-sm font-medium text-white transition-colors hover:bg-brand sm:inline-flex dark:bg-white dark:text-zinc-900 dark:hover:bg-brand dark:hover:text-white"
+            title={t.resume}
+            class="hidden items-center gap-2 rounded-full bg-zinc-900 px-4 py-2 lg:max-xl:px-3 font-mono text-sm font-medium text-white transition-colors hover:bg-brand sm:inline-flex dark:bg-white dark:text-zinc-900 dark:hover:bg-brand dark:hover:text-white"
           >
             <Icon name="file-cv" class="size-4" />
-            Résumé
+            <span class="lg:max-xl:sr-only">{t.resume}</span>
           </a>
         )
       }
@@ -64,8 +74,10 @@ const [first, ...rest] = siteConfig.name.split(" ");
       <button
         type="button"
         data-menu-toggle
-        class="grid size-10 place-items-center rounded-full text-zinc-700 transition-colors hover:bg-zinc-100 lg:hidden dark:text-zinc-300 dark:hover:bg-zinc-800"
-        aria-label="Open menu"
+        class="grid size-9 place-items-center rounded-full text-zinc-700 transition-colors hover:bg-zinc-100 min-[360px]:size-10 lg:hidden dark:text-zinc-300 dark:hover:bg-zinc-800"
+        aria-label={t.a11y.openMenu}
+        data-label-open={t.a11y.openMenu}
+        data-label-close={t.a11y.closeMenu}
         aria-expanded="false"
         aria-controls="mobile-menu"
       >
@@ -105,7 +117,7 @@ const [first, ...rest] = siteConfig.name.split(" ");
               class="flex items-center justify-center gap-2 rounded-full bg-zinc-900 px-4 py-3 font-mono text-sm font-medium text-white dark:bg-white dark:text-zinc-900"
             >
               <Icon name="download" class="size-4" />
-              Download résumé
+              {t.downloadResume}
             </a>
           </li>
         )
@@ -140,7 +152,10 @@ const [first, ...rest] = siteConfig.name.split(" ");
     menu.toggleAttribute("data-open", open);
     menu.toggleAttribute("inert", !open);
     menuToggle.setAttribute("aria-expanded", String(open));
-    menuToggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+    menuToggle.setAttribute(
+      "aria-label",
+      (open ? menuToggle.dataset.labelClose : menuToggle.dataset.labelOpen) ?? "",
+    );
     onScroll();
   };
   menuToggle.addEventListener("click", () => setMenu(!menu.hasAttribute("data-open")));

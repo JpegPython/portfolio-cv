@@ -1,7 +1,12 @@
 ---
-import { siteConfig } from "../config";
+import { getConfig } from "../config";
+import { getLang, ui } from "../i18n";
 import SectionHeading from "./SectionHeading.astro";
 import Icon from "./Icon.astro";
+
+const lang = getLang(Astro.url);
+const siteConfig = getConfig(lang);
+const t = ui[lang];
 
 const { education, certifications, languages } = siteConfig;
 const hasSection = education.length > 0 || certifications.length > 0 || languages.length > 0;
@@ -14,9 +19,9 @@ const hasSidebar = education.length > 0 || languages.length > 0;
       <div class="container-page">
         <SectionHeading
           id="education"
-          eyebrow="learning"
-          title="Education & certifications"
-          subtitle="Formal education, continuous learning and the languages I work in."
+          eyebrow={t.education.eyebrow}
+          title={t.education.title}
+          subtitle={t.education.subtitle}
         />
 
         <div class="grid gap-6 lg:grid-cols-12">
@@ -52,7 +57,7 @@ const hasSidebar = education.length > 0 || languages.length > 0;
                 <article class="card p-6 sm:p-8" data-reveal style="--reveal-delay: 80ms">
                   <h3 class="flex items-center gap-2 font-mono text-base font-semibold text-zinc-900 dark:text-white">
                     <Icon name="language" class="size-5 text-brand-ink" />
-                    Languages
+                    {t.education.languages}
                   </h3>
                   <ul class="mt-5 space-y-4">
                     {languages.map((l) => (
@@ -61,7 +66,7 @@ const hasSidebar = education.length > 0 || languages.length > 0;
                           <p class="font-medium text-zinc-900 dark:text-zinc-100">{l.name}</p>
                           <p class="font-mono text-xs text-zinc-500">{l.level}</p>
                         </div>
-                        <div class="flex gap-1" role="img" aria-label={`${l.level}: ${l.score} out of 5`}>
+                        <div class="flex gap-1" role="img" aria-label={`${l.level}: ${l.score} ${t.education.outOf}`}>
                           {[1, 2, 3, 4, 5].map((n) => (
                             <span
                               class:list={[
@@ -84,7 +89,7 @@ const hasSidebar = education.length > 0 || languages.length > 0;
               <div class="flex items-center justify-between gap-4">
                 <h3 class="flex items-center gap-2 font-mono text-base font-semibold text-zinc-900 dark:text-white">
                   <Icon name="certificate" class="size-5 text-brand-ink" />
-                  Certifications & courses
+                  {t.education.certifications}
                 </h3>
                 <span class="chip">{certifications.length}</span>
               </div>

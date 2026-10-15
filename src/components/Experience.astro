@@ -1,7 +1,12 @@
 ---
-import { siteConfig } from "../config";
+import { getConfig } from "../config";
+import { getLang, ui } from "../i18n";
 import SectionHeading from "./SectionHeading.astro";
 import Icon from "./Icon.astro";
+
+const lang = getLang(Astro.url);
+const siteConfig = getConfig(lang);
+const t = ui[lang];
 ---
 
 {
@@ -10,9 +15,9 @@ import Icon from "./Icon.astro";
       <div class="container-page">
         <SectionHeading
           id="experience"
-          eyebrow="career"
-          title="Where I've worked"
-          subtitle="Building products, pipelines and automation for credit, telecom and R&D teams."
+          eyebrow={t.experience.eyebrow}
+          title={t.experience.title}
+          subtitle={t.experience.subtitle}
         />
 
         <ol class="relative space-y-10 border-l border-zinc-200 pl-6 sm:pl-10 md:border-none md:pl-0 dark:border-zinc-800">
@@ -31,7 +36,7 @@ import Icon from "./Icon.astro";
                 {exp.current && (
                   <span class="mt-2 inline-flex items-center gap-1.5 rounded-full bg-brand/10 px-2.5 py-0.5 font-mono text-xs font-medium text-brand-ink">
                     <span class="size-1.5 animate-pulse rounded-full bg-brand" />
-                    Current
+                    {t.experience.current}
                   </span>
                 )}
               </div>
@@ -69,7 +74,7 @@ import Icon from "./Icon.astro";
                 </ul>
 
                 {exp.skills && exp.skills.length > 0 && (
-                  <ul class="mt-6 flex flex-wrap gap-2 border-t border-zinc-100 pt-5 dark:border-zinc-800" aria-label="Technologies">
+                  <ul class="mt-6 flex flex-wrap gap-2 border-t border-zinc-100 pt-5 dark:border-zinc-800" aria-label={t.a11y.technologies}>
                     {exp.skills.map((s) => (
                       <li class="chip">{s}</li>
                     ))}

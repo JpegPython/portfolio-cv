@@ -1,5 +1,6 @@
 ---
 import { sectionIndex, type SectionId } from "../sections";
+import { getLang } from "../i18n";
 
 interface Props {
   id: SectionId;
@@ -9,11 +10,12 @@ interface Props {
 }
 
 const { id, eyebrow, title, subtitle } = Astro.props;
+const lang = getLang(Astro.url);
 ---
 
 <div class="mb-12 max-w-2xl sm:mb-16" data-reveal>
   <p class="font-mono text-sm text-brand-ink">
-    <span class="opacity-60">{sectionIndex(id)}.</span>
+    <span class="opacity-60">{sectionIndex(id, lang)}.</span>
     {eyebrow}
   </p>
   <h2

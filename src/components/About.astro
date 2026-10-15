@@ -1,36 +1,41 @@
 ---
 import { Image } from "astro:assets";
-import { siteConfig } from "../config";
+import { getConfig } from "../config";
+import { getLang, ui } from "../i18n";
 import SectionHeading from "./SectionHeading.astro";
 import Icon from "./Icon.astro";
+
+const lang = getLang(Astro.url);
+const siteConfig = getConfig(lang);
+const t = ui[lang];
 
 const years = new Date().getFullYear() - siteConfig.careerStartYear;
 const current = siteConfig.experience.find((e) => e.current);
 
 const stats = [
-  years > 0 && { value: `${years}+`, label: "Years of professional experience" },
-  siteConfig.experience.length > 0 && { value: siteConfig.experience.length, label: "Companies" },
+  years > 0 && { value: `${years}+`, label: t.about.stats.years },
+  siteConfig.experience.length > 0 && { value: siteConfig.experience.length, label: t.about.stats.companies },
   siteConfig.projects.length + siteConfig.research.length > 0 && {
     value: siteConfig.projects.length + siteConfig.research.length,
-    label: "Projects & research programs",
+    label: t.about.stats.projects,
   },
   siteConfig.certifications.length > 0 && {
     value: siteConfig.certifications.length,
-    label: "Certifications",
+    label: t.about.stats.certifications,
   },
 ].filter(Boolean) as { value: string | number; label: string }[];
 
 const facts = [
-  { icon: "map-pin", label: "Based in", value: siteConfig.location },
-  current && { icon: "briefcase", label: "Currently", value: `${current.title} @ ${current.company}` },
+  { icon: "map-pin", label: t.about.facts.basedIn, value: siteConfig.location },
+  current && { icon: "briefcase", label: t.about.facts.currently, value: `${current.title} @ ${current.company}` },
   siteConfig.education[0] && {
     icon: "school",
-    label: "Studying",
+    label: t.about.facts.studying,
     value: `${siteConfig.education[0].degree} — ${siteConfig.education[0].school}`,
   },
   siteConfig.languages.length > 0 && {
     icon: "language",
-    label: "Speaks",
+    label: t.about.facts.speaks,
     value: siteConfig.languages.map((l) => l.name).join(" · "),
   },
 ].filter(Boolean) as { icon: "map-pin" | "briefcase" | "school" | "language"; label: string; value: string }[];
@@ -40,7 +45,7 @@ const facts = [
   siteConfig.aboutMe.length > 0 && (
     <section id="about" class="section-pad relative">
       <div class="container-page">
-        <SectionHeading id="about" eyebrow="about me" title="Engineering software around data and AI." />
+        <SectionHeading id="about" eyebrow={t.about.eyebrow} title={t.about.title} />
 
         <div class="grid gap-12 lg:grid-cols-12 lg:gap-16">
           {siteConfig.aboutImage && (
@@ -52,7 +57,7 @@ const facts = [
                 />
                 <Image
                   src={siteConfig.aboutImage}
-                  alt={`${siteConfig.fullName} smiling`}
+                  alt={`${siteConfig.fullName} ${t.a11y.smiling}`}
                   widths={[640, 960, 1280, 1538]}
                   sizes="(min-width: 1024px) 1040px, 150vw"
                   class="relative aspect-[4/3] w-full rounded-3xl object-cover object-[18%_30%] lg:aspect-[4/5]"
@@ -62,7 +67,7 @@ const facts = [
                     <Icon name="sparkles" class="size-5" />
                   </span>
                   <p class="text-sm leading-snug text-zinc-600 dark:text-zinc-400">
-                    Open to full-time roles in <span class="font-medium text-zinc-900 dark:text-white">Software, Data, ML & AI</span>
+                    {t.about.openTo}{" "}<span class="font-medium text-zinc-900 dark:text-white">{t.about.openToAreas}</span>
                   </p>
                 </div>
               </div>

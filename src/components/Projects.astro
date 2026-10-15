@@ -1,8 +1,13 @@
 ---
-import { siteConfig } from "../config";
+import { getConfig } from "../config";
+import { getLang, ui } from "../i18n";
 import { pad } from "../utils";
 import SectionHeading from "./SectionHeading.astro";
 import Icon from "./Icon.astro";
+
+const lang = getLang(Astro.url);
+const siteConfig = getConfig(lang);
+const t = ui[lang];
 ---
 
 {
@@ -11,9 +16,9 @@ import Icon from "./Icon.astro";
       <div class="container-page">
         <SectionHeading
           id="projects"
-          eyebrow="selected work"
-          title="Projects"
-          subtitle="Side projects and research where I go deep on APIs, data quality and deep learning."
+          eyebrow={t.projects.eyebrow}
+          title={t.projects.title}
+          subtitle={t.projects.subtitle}
         />
 
         <div class="grid gap-6 lg:grid-cols-2">
@@ -52,7 +57,7 @@ import Icon from "./Icon.astro";
               )}
 
               <div class="mt-auto pt-6">
-                <ul class="flex flex-wrap gap-2" aria-label="Technologies">
+                <ul class="flex flex-wrap gap-2" aria-label={t.a11y.technologies}>
                   {project.skills.map((s) => (
                     <li class="chip">{s}</li>
                   ))}
@@ -68,7 +73,7 @@ import Icon from "./Icon.astro";
                         class="inline-flex items-center gap-2 font-mono text-sm font-medium text-zinc-800 transition-colors hover:text-brand-ink dark:text-zinc-200"
                       >
                         <Icon name="brand-github" class="size-4" />
-                        Source code
+                        {t.projects.source}
                         <Icon name="arrow-up-right" class="size-3.5" />
                       </a>
                     )}
@@ -80,7 +85,7 @@ import Icon from "./Icon.astro";
                         class="inline-flex items-center gap-2 font-mono text-sm font-medium text-zinc-800 transition-colors hover:text-brand-ink dark:text-zinc-200"
                       >
                         <Icon name="world" class="size-4" />
-                        Live
+                        {t.projects.live}
                         <Icon name="arrow-up-right" class="size-3.5" />
                       </a>
                     )}
@@ -100,7 +105,7 @@ import Icon from "./Icon.astro";
               class="group inline-flex items-center gap-2 rounded-full border border-zinc-300 px-5 py-2.5 font-mono text-sm text-zinc-700 transition hover:border-zinc-900 hover:text-zinc-900 dark:border-zinc-700 dark:text-zinc-300 dark:hover:border-zinc-300 dark:hover:text-white"
             >
               <Icon name="brand-github" class="size-4" />
-              More on GitHub
+              {t.projects.more}
               <Icon name="arrow-up-right" class="size-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </a>
           </div>

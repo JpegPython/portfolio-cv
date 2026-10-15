@@ -1,7 +1,12 @@
 ---
-import { siteConfig } from "../config";
+import { getConfig } from "../config";
+import { getLang, ui } from "../i18n";
 import SectionHeading from "./SectionHeading.astro";
 import Icon from "./Icon.astro";
+
+const lang = getLang(Astro.url);
+const siteConfig = getConfig(lang);
+const t = ui[lang];
 ---
 
 {
@@ -10,9 +15,9 @@ import Icon from "./Icon.astro";
       <div class="container-page">
         <SectionHeading
           id="research"
-          eyebrow="academic experience"
-          title="Research & academia"
-          subtitle="Where my interest in deep learning and computer vision started."
+          eyebrow={t.research.eyebrow}
+          title={t.research.title}
+          subtitle={t.research.subtitle}
         />
 
         <div class="grid gap-6 md:grid-cols-2">

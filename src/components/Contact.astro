@@ -1,8 +1,13 @@
 ---
-import { siteConfig } from "../config";
+import { getConfig } from "../config";
+import { getLang, ui } from "../i18n";
 import { withBase } from "../utils";
 import { sectionIndex } from "../sections";
 import Icon from "./Icon.astro";
+
+const lang = getLang(Astro.url);
+const siteConfig = getConfig(lang);
+const t = ui[lang];
 
 const { social } = siteConfig;
 const hasContact = Object.values(social).some(Boolean);
@@ -22,14 +27,13 @@ const hasContact = Object.values(social).some(Boolean);
           </div>
 
           <p class="font-mono text-sm text-sky-300">
-            <span class="opacity-60">{sectionIndex("contact")}.</span> what's next
+            <span class="opacity-60">{sectionIndex("contact", lang)}.</span>{" "}{t.contact.eyebrow}
           </p>
           <h2 class="mx-auto mt-4 max-w-2xl font-mono text-3xl font-bold tracking-tight text-balance text-white sm:text-5xl">
-            Let's build something together.
+            {t.contact.title}
           </h2>
           <p class="mx-auto mt-5 max-w-xl text-base text-pretty text-zinc-300 sm:text-lg">
-            I'm looking for full-time opportunities in Software Engineering, Data, Machine Learning or AI —
-            remote or with relocation. My inbox is always open.
+            {t.contact.text}
           </p>
 
           {social.email && (
@@ -39,16 +43,18 @@ const hasContact = Object.values(social).some(Boolean);
                 class="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-white px-7 py-3.5 font-mono text-sm font-semibold text-zinc-900 transition hover:-translate-y-0.5 hover:bg-zinc-100 sm:w-auto"
               >
                 <Icon name="send" class="size-4" />
-                Say hello
+                {t.contact.cta}
               </a>
               <button
                 type="button"
                 data-copy={social.email}
+                data-copied={t.contact.copied}
+                data-copied-status={t.contact.copiedStatus}
                 class="inline-flex w-full items-center justify-center gap-2 rounded-full border border-white/20 px-6 py-3.5 font-mono text-sm text-zinc-200 transition hover:border-white/50 hover:text-white sm:w-auto"
               >
                 <span data-copy-icon><Icon name="copy" class="size-4" /></span>
                 <span data-copy-done class="hidden"><Icon name="check" class="size-4 text-emerald-400" /></span>
-                <span data-copy-label class="max-w-full truncate">{social.email}</span>
+                <span data-copy-label class="min-w-0 truncate text-[13px] sm:text-sm">{social.email}</span>
               </button>
             </div>
           )}
@@ -79,7 +85,7 @@ const hasContact = Object.values(social).some(Boolean);
             {siteConfig.resume && (
               <li>
                 <a href={withBase(siteConfig.resume)} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 rounded-full px-4 py-2 font-mono text-sm text-zinc-400 transition hover:bg-white/10 hover:text-white">
-                  <Icon name="file-cv" class="size-5" /> Résumé
+                  <Icon name="file-cv" class="size-5" /> {t.resume}
                 </a>
               </li>
             )}
@@ -105,10 +111,10 @@ const hasContact = Object.values(social).some(Boolean);
       window.location.href = `mailto:${email}`;
       return;
     }
-    label.textContent = "Copied to clipboard!";
+    label.textContent = button.dataset.copied ?? "Copied!";
     icon.classList.add("hidden");
     done.classList.remove("hidden");
-    if (status) status.textContent = "Email address copied to clipboard";
+    if (status) status.textContent = button.dataset.copiedStatus ?? "";
     setTimeout(() => {
       label.textContent = email;
       icon.classList.remove("hidden");

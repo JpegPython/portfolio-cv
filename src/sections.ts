@@ -1,29 +1,37 @@
-import { siteConfig } from "./config";
+import { getConfig } from "./config";
+import { ui, type Lang } from "./i18n";
 
-// Order here drives the page, the header nav, the footer nav and the section numbers.
+const ids = ["about", "skills", "experience", "projects", "research", "education", "contact"] as const;
+
+export type SectionId = (typeof ids)[number];
+
+// Order of `ids` drives the page, the header nav, the footer nav and the section numbers.
 // A section disappears everywhere when its data is removed from the config.
-const all = [
-  { id: "about", label: "About", enabled: siteConfig.aboutMe.length > 0 },
-  { id: "skills", label: "Skills", enabled: siteConfig.skills.length > 0 },
-  { id: "experience", label: "Experience", enabled: siteConfig.experience.length > 0 },
-  { id: "projects", label: "Projects", enabled: siteConfig.projects.length > 0 },
-  { id: "research", label: "Research", enabled: siteConfig.research.length > 0 },
-  {
-    id: "education",
-    label: "Education",
-    enabled:
-      siteConfig.education.length > 0 ||
-      siteConfig.certifications.length > 0 ||
-      siteConfig.languages.length > 0,
-  },
-  { id: "contact", label: "Contact", enabled: Object.values(siteConfig.social).some(Boolean) },
-] as const;
+function isEnabled(id: SectionId, lang: Lang): boolean {
+  const c = getConfig(lang);
+  switch (id) {
+    case "about":
+      return c.aboutMe.length > 0;
+    case "skills":
+      return c.skills.length > 0;
+    case "experience":
+      return c.experience.length > 0;
+    case "projects":
+      return c.projects.length > 0;
+    case "research":
+      return c.research.length > 0;
+    case "education":
+      return c.education.length > 0 || c.certifications.length > 0 || c.languages.length > 0;
+    case "contact":
+      return Object.values(c.social).some(Boolean);
+  }
+}
 
-export type SectionId = (typeof all)[number]["id"];
-
-export const sections = all.filter((s) => s.enabled);
+export function getSections(lang: Lang) {
+  return ids.filter((id) => isEnabled(id, lang)).map((id) => ({ id, label: ui[lang].nav[id] }));
+}
 
 /** "01", "02", … for the given section, based on which sections are enabled. */
-export function sectionIndex(id: SectionId): string {
-  return String(sections.findIndex((s) => s.id === id) + 1).padStart(2, "0");
+export function sectionIndex(id: SectionId, lang: Lang): string {
+  return String(getSections(lang).findIndex((s) => s.id === id) + 1).padStart(2, "0");
 }
