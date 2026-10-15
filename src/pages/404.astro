@@ -1,0 +1,40 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Icon from "../components/Icon.astro";
+import { getConfig } from "../config";
+import { homeUrl, ui } from "../i18n";
+
+// 404 lives at the root, so it shows both languages
+const { en, pt } = ui;
+const siteConfig = getConfig("en");
+---
+
+<Layout title={`${en.notFound.title} — ${siteConfig.fullName}`}>
+  <main id="main" class="relative isolate grid min-h-[100svh] place-items-center overflow-hidden px-5 text-center">
+    <div aria-hidden="true" class="bg-grid absolute inset-0 -z-10 [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,black,transparent)]"></div>
+    <div>
+      <p class="font-mono text-sm text-brand-ink">&gt; error 404</p>
+      <h1 class="mt-4 font-mono text-4xl font-bold tracking-tight text-balance text-zinc-900 sm:text-7xl dark:text-white">
+        {en.notFound.title}<span class="text-brand-ink">.</span>
+      </h1>
+      <p class="mx-auto mt-5 max-w-md text-zinc-600 dark:text-zinc-400">{en.notFound.text}</p>
+      <p class="mx-auto mt-1 max-w-md text-sm text-zinc-500" lang="pt-BR">{pt.notFound.text}</p>
+      <div class="mt-10 flex flex-wrap justify-center gap-3">
+        <a
+          href={homeUrl("en")}
+          class="inline-flex items-center gap-2 rounded-full bg-brand px-6 py-3 font-mono text-sm font-medium text-white transition hover:-translate-y-0.5"
+        >
+          <Icon name="arrow-up-right" class="size-4 -rotate-90" />
+          {en.notFound.back}
+        </a>
+        <a
+          href={homeUrl("pt")}
+          lang="pt-BR"
+          class="inline-flex items-center gap-2 rounded-full border border-zinc-300 px-6 py-3 font-mono text-sm font-medium text-zinc-800 transition hover:-translate-y-0.5 dark:border-zinc-700 dark:text-zinc-200"
+        >
+          {pt.notFound.back}
+        </a>
+      </div>
+    </div>
+  </main>
+</Layout>

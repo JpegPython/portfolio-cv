@@ -1,0 +1,124 @@
+---
+import { getConfig } from "../config";
+import { getLang, ui } from "../i18n";
+import { withBase } from "../utils";
+import { sectionIndex } from "../sections";
+import Icon from "./Icon.astro";
+
+const lang = getLang(Astro.url);
+const siteConfig = getConfig(lang);
+const t = ui[lang];
+
+const { social } = siteConfig;
+const hasContact = Object.values(social).some(Boolean);
+---
+
+{
+  hasContact && (
+    <section id="contact" class="section-pad">
+      <div class="container-page">
+        <div
+          class="relative isolate overflow-hidden rounded-[2rem] bg-zinc-950 px-6 py-16 text-center sm:px-12 sm:py-20 lg:py-24 dark:border dark:border-zinc-800 dark:bg-zinc-900/60"
+          data-reveal
+        >
+          <div aria-hidden="true" class="absolute inset-0 -z-10">
+            <div class="bg-grid absolute inset-0 opacity-40 [mask-image:radial-gradient(ellipse_60%_70%_at_50%_100%,black,transparent)]" />
+            <div class="absolute -bottom-40 left-1/2 size-[36rem] -translate-x-1/2 rounded-full bg-brand opacity-40 blur-3xl" />
+          </div>
+
+          <p class="font-mono text-sm text-sky-300">
+            <span class="opacity-60">{sectionIndex("contact", lang)}.</span>{" "}{t.contact.eyebrow}
+          </p>
+          <h2 class="mx-auto mt-4 max-w-2xl font-mono text-3xl font-bold tracking-tight text-balance text-white sm:text-5xl">
+            {t.contact.title}
+          </h2>
+          <p class="mx-auto mt-5 max-w-xl text-base text-pretty text-zinc-300 sm:text-lg">
+            {t.contact.text}
+          </p>
+
+          {social.email && (
+            <div class="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
+              <a
+                href={`mailto:${social.email}`}
+                class="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-white px-7 py-3.5 font-mono text-sm font-semibold text-zinc-900 transition hover:-translate-y-0.5 hover:bg-zinc-100 sm:w-auto"
+              >
+                <Icon name="send" class="size-4" />
+                {t.contact.cta}
+              </a>
+              <button
+                type="button"
+                data-copy={social.email}
+                data-copied={t.contact.copied}
+                data-copied-status={t.contact.copiedStatus}
+                class="inline-flex w-full items-center justify-center gap-2 rounded-full border border-white/20 px-6 py-3.5 font-mono text-sm text-zinc-200 transition hover:border-white/50 hover:text-white sm:w-auto"
+              >
+                <span data-copy-icon><Icon name="copy" class="size-4" /></span>
+                <span data-copy-done class="hidden"><Icon name="check" class="size-4 text-emerald-400" /></span>
+                <span data-copy-label class="min-w-0 truncate text-[13px] sm:text-sm">{social.email}</span>
+              </button>
+            </div>
+          )}
+          <p class="sr-only" aria-live="polite" data-copy-status></p>
+
+          <ul class="mt-10 flex flex-wrap items-center justify-center gap-2">
+            {social.linkedin && (
+              <li>
+                <a href={social.linkedin} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 rounded-full px-4 py-2 font-mono text-sm text-zinc-400 transition hover:bg-white/10 hover:text-white">
+                  <Icon name="brand-linkedin" class="size-5" /> LinkedIn
+                </a>
+              </li>
+            )}
+            {social.github && (
+              <li>
+                <a href={social.github} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 rounded-full px-4 py-2 font-mono text-sm text-zinc-400 transition hover:bg-white/10 hover:text-white">
+                  <Icon name="brand-github" class="size-5" /> GitHub
+                </a>
+              </li>
+            )}
+            {social.twitter && (
+              <li>
+                <a href={social.twitter} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 rounded-full px-4 py-2 font-mono text-sm text-zinc-400 transition hover:bg-white/10 hover:text-white">
+                  <Icon name="brand-x" class="size-5" /> X
+                </a>
+              </li>
+            )}
+            {siteConfig.resume && (
+              <li>
+                <a href={withBase(siteConfig.resume)} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 rounded-full px-4 py-2 font-mono text-sm text-zinc-400 transition hover:bg-white/10 hover:text-white">
+                  <Icon name="file-cv" class="size-5" /> {t.resume}
+                </a>
+              </li>
+            )}
+          </ul>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+<script>
+  const button = document.querySelector<HTMLButtonElement>("[data-copy]");
+  const status = document.querySelector<HTMLElement>("[data-copy-status]");
+
+  button?.addEventListener("click", async () => {
+    const label = button.querySelector<HTMLElement>("[data-copy-label]")!;
+    const icon = button.querySelector<HTMLElement>("[data-copy-icon]")!;
+    const done = button.querySelector<HTMLElement>("[data-copy-done]")!;
+    const email = button.dataset.copy!;
+    try {
+      await navigator.clipboard.writeText(email);
+    } catch {
+      window.location.href = `mailto:${email}`;
+      return;
+    }
+    label.textContent = button.dataset.copied ?? "Copied!";
+    icon.classList.add("hidden");
+    done.classList.remove("hidden");
+    if (status) status.textContent = button.dataset.copiedStatus ?? "";
+    setTimeout(() => {
+      label.textContent = email;
+      icon.classList.remove("hidden");
+      done.classList.add("hidden");
+    }, 2000);
+  });
+</script>
